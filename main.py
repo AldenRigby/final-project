@@ -1,11 +1,14 @@
 import time
 import threading
 import sys
+import pygame
+pygame.mixer.init()
+sound1 = pygame.mixer.Sound('button.mp3')  # Load a sound.
 
 start = time.time()
 
 def getRuntime():
-    return start - time.time()
+    return time.time() - start
 
 def background():
     while True:
@@ -16,6 +19,7 @@ def background():
 
 def handling_input(inp):
     print('Got {}'.format(inp))
+    sound1.play()
 
 t = threading.Thread(target=background)
 t.daemon = True
