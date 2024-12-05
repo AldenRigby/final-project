@@ -101,7 +101,7 @@ def background(): # this function is always running in the backgroud. this lets 
 
         sys.stdout.flush()
 
-def handling_input(inp): # on player input
+def handling_input(): # on player input
     global goodHits, badHits, playerIndex, levelIndex
     #check every allowed hit in the level
     foundHit = False
@@ -148,9 +148,10 @@ while True:
     updateScore()
     #input stuff
     inp = input()
-    handling_input(inp)
+    handling_input()
     if inp == 'q':
         sys.stdout.write("\033[K")
         print('quitting')
         backgroundMusic.stop()
         sys.exit()
+
