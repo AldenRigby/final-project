@@ -19,7 +19,7 @@ import sys
 import pygame
 
 pygame.mixer.init() # setup pygame mixer
-sound1 = pygame.mixer.Sound('button.mp3')  # Load a sound.
+sound1 = pygame.mixer.Sound('sounds/kick.mp3')  # Load a sound.
 #backgroundMusic = pygame.mixer.Sound('XXX.mp3')  # Load a sound.
 #hitEffect = pygame.mixer.Sound('XXX.mp3')  # Load a sound.
 #missEffect = pygame.mixer.Sound('XXX.mp3')  # Load a sound.
