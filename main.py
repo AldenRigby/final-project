@@ -34,15 +34,17 @@ LEVEL_BPM = 200
 LEVEL_SECONDS_PER_BEAT = 60/LEVEL_BPM
 #LEVEL_HITS_BEAT        = [0, 32, 48, 51.16, 59.16]
 #LEVEL_HITS_TIMING_BEAT = [4, 2,  1, .5,    .5]
-
-LEVEL_HITS        = [0,    9.6, 14.4, 16.55, 17.75, 19.1, 21.5, 23.9]
-LEVEL_HITS_TIMING = [1.2, .6,  .3,   .15,   .15,   .3,   .3,   .3]
+#                                                                                the drop V                                                                                                                                   #slowdown V
+LEVEL_HITS        = [0,    9.6, 14.4, 16.55, 17.75, 19.25, 21.65, 24.05, 26.15, 27.35, 28.8, 30,  31.2, 32.4, 33.6, 34.8, 36,  37.2, 38.4, 39.6, 40.8, 42,  43.2, 44.4, 45.6, 46.8, 48,  49.2, 50.4, 51.6, 52.8, 54,  55.2, 56.4, 57.6, 58.95, 61,  62.35,  63.4]
+LEVEL_HITS_TIMING = [1.2, .6,  .3,   .15,   .15,   .3,   .3,   .3,      .15,   .15,   .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,   .15, .15,    .15]
 
 LEVEL_ACTUAL_HITS = [] # timing of when they actually have to hit
 for i in range(len(LEVEL_HITS)):
     LEVEL_ACTUAL_HITS.append(LEVEL_HITS[i] + LEVEL_HITS_TIMING[i]*6)
 
 leniency = .15 #if hit is within this many seconds (+-) of a valid input then allow it
+hitOffset = 0.07 #offset for hit after beat
+beatOffset = 0.11 #offset for beat in relation to music
 #secondsPerBeat = .5 #how many seconds are in each "beat" of the song. replaced with levelhitstiming
 goodHits = 0 #how many times player got a good hit
 badHits = 0 #how many times player missed a note
@@ -50,6 +52,7 @@ levelIndex = 0 #what hit the program is on
 playerIndex = 0 #what hit the player is on (this should always be lower than or equal to levelindex)
 
 start = time.time() # set up the time at the start
+time.sleep(beatOffset)
 backgroundMusic.play()
 
 #set up graphics
@@ -60,6 +63,9 @@ sys.stdout.write("\033[5F")
 def getRuntime(): # this function returns how much time since the program started (useful for getting time on the level)
     return time.time() - start
 
+def getOffset(time): #this function returns how off you were in ms
+    return str(int((getRuntime() - time - hitOffset)*1000)) + "ms"
+
 def startHit(index): # this function starts a 1234567 thing
     for i in range(7):
         sys.stdout.write(f"""
@@ -68,14 +74,14 @@ def startHit(index): # this function starts a 1234567 thing
               """)
         sys.stdout.write("\033[3F")
         sys.stdout.flush()
-        time.sleep(.05)
+        time.sleep(hitOffset)
         if i < 6:
             beatEffect.play()
         else:
             hitEffect.play()
 
         if i < 7:
-            time.sleep(LEVEL_HITS_TIMING[index]-.05)
+            time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
 
 def updateScore():
     #print score
@@ -121,7 +127,7 @@ def handling_input(): # on player input
             if i + leniency > getRuntime() and i - leniency < getRuntime():
                 sys.stdout.write("\033[F")
                 sys.stdout.write("\033[K")
-                print("    good job you hit", end="\r")
+                print(f"{getOffset(i)} good job you hit", end="\r")
                 playerIndex += 1
                 goodHits = goodHits + 1
                 foundHit = True
@@ -136,7 +142,7 @@ def handling_input(): # on player input
                 print("    already got that note", end="\r")
             else:
                 missEffect.play()
-                print("    that was close", end="\r")
+                print(f"{getOffset(i)} that was close", end="\r")
                 playerIndex += 1
                 badHits = badHits + 1
             foundHit = True
