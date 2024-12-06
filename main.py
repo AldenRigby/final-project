@@ -26,17 +26,24 @@ hitEffect = pygame.mixer.Sound('sounds/hit.mp3')  # plays when player is suppose
 missEffect = pygame.mixer.Sound('sounds/miss.mp3')  # miss
 #drumEffect = pygame.mixer.Sound('sounds/drum.mp3')  # if player hits right then this should play soon after
 
+
 #how many seconds after program runs to start a 7 thing. //
 #how many seconds between beats for the 7 hit above thingy
 #samurai techno is 200 bpm. .6 for fast, .3 for medium, .15 for fast
-LEVEL_HITS        = [0,  4.8,9.6,14.4,16.8]
-LEVEL_HITS_TIMING = [.6, .6, .6, .15, .15]
+LEVEL_BPM = 200
+LEVEL_SECONDS_PER_BEAT = 60/LEVEL_BPM
+#LEVEL_HITS_BEAT        = [0, 32, 48, 51.16, 59.16]
+#LEVEL_HITS_TIMING_BEAT = [4, 2,  1, .5,    .5]
+
+LEVEL_HITS        = [0,    9.6, 14.4, 16.55, 17.75, 19.1, 21.5, 23.9]
+LEVEL_HITS_TIMING = [1.2, .6,  .3,   .15,   .15,   .3,   .3,   .3]
+
 LEVEL_ACTUAL_HITS = [] # timing of when they actually have to hit
 for i in range(len(LEVEL_HITS)):
     LEVEL_ACTUAL_HITS.append(LEVEL_HITS[i] + LEVEL_HITS_TIMING[i]*6)
 
-leniency = .1 #if hit is within this many seconds (+-) of a valid input then allow it
-secondsPerBeat = .5 #how many seconds are in each "beat" of the song.
+leniency = .15 #if hit is within this many seconds (+-) of a valid input then allow it
+#secondsPerBeat = .5 #how many seconds are in each "beat" of the song. replaced with levelhitstiming
 goodHits = 0 #how many times player got a good hit
 badHits = 0 #how many times player missed a note
 levelIndex = 0 #what hit the program is on
@@ -61,11 +68,14 @@ def startHit(index): # this function starts a 1234567 thing
               """)
         sys.stdout.write("\033[3F")
         sys.stdout.flush()
+        time.sleep(.05)
         if i < 6:
             beatEffect.play()
         else:
             hitEffect.play()
-        time.sleep(LEVEL_HITS_TIMING[index])
+
+        if i < 7:
+            time.sleep(LEVEL_HITS_TIMING[index]-.05)
 
 def updateScore():
     #print score
@@ -101,7 +111,7 @@ def background(): # this function is always running in the backgroud. this lets 
 
         sys.stdout.flush()
 
-def handling_input(inp): # on player input
+def handling_input(): # on player input
     global goodHits, badHits, playerIndex, levelIndex
     #check every allowed hit in the level
     foundHit = False
@@ -148,7 +158,7 @@ while True:
     updateScore()
     #input stuff
     inp = input()
-    handling_input(inp)
+    handling_input()
     if inp == 'q':
         sys.stdout.write("\033[K")
         print('quitting')
