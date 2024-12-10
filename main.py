@@ -21,8 +21,10 @@ from game import Game
 
 pygame.init()
 screen = pygame.display.set_mode((600, 500))
-game = Game('final-project\img\column.png', 'final-project\img\cursor.jpg', 'final-project\img\background.png')
-game.resize_imgs()
+clock = pygame.time.Clock()
+
+game = Game('img/column2.png', 'img/cursor.jpg', 'img/background2.jpg')
+game.resize_images()
 
 while True:
     for event in pygame.event.get():
@@ -31,10 +33,14 @@ while True:
             sys.exit
     
     game.show_background(screen)
+    game.show_colums(screen)
+
 
     if game.active:
-        game.show_colums(screen)
         game.show_cursor(screen)
+
+    pygame.display.update()
+    clock.tick(120)
 
 pygame.mixer.init() # setup pygame mixer
 beatEffect = pygame.mixer.Sound('./sounds/kick.mp3')  # every beat this plays
