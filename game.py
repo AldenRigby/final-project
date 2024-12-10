@@ -10,11 +10,20 @@ class Game:
         self.column6 = pygame.image.load(column_img).convert_alpha()
         self.column7 = pygame.image.load(column_img).convert_alpha()
         self.columns = []
-        self.columns.append(self.column1, self.column2, self.column3, self.column4, self.column5, self.column6, self.column7)
+        self.columns.append(self.column1)
+        self.columns.append(self.column2)
+        self.columns.append(self.column3)
+        self.columns.append(self.column4)
+        self.columns.append(self.column5)
+        self.columns.append(self.column6)
+        self.columns.append(self.column7)
 
         self.cursor = pygame.image.load(cursor_img).convert_alpha()
        # self.cursor_rect = self.cursor.get_rect(center = (, ))
         self.background = pygame.image.load(background_img).convert_alpha()
+        self.active = True
+        self.font = pygame.font.SysFont(None, 48)
+
 
     def resize_imgs(self):
         for column in self.columns:
@@ -28,4 +37,7 @@ class Game:
 
     def show_colums(self, screen):
         for i in range(len(self.columns)):
-            screen.blit(self.columns[i], (i*70+55, 140))
+            screen.blit(self.columns[i], (i*70+55, 140)) 
+
+    def show_cursor(self, screen):
+        screen.blit(self.cursor, (55, 145))
