@@ -17,6 +17,24 @@ import time
 import threading
 import sys
 import pygame
+from game import Game
+
+pygame.init()
+screen = pygame.display.set_mode((600, 500))
+game = Game('final-project\img\column.png', 'final-project\img\cursor.jpg', 'final-project\img\background.png')
+game.resize_imgs()
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit
+    
+    game.show_background(screen)
+
+    if game.active:
+        game.show_colums(screen)
+        game.show_cursor(screen)
 
 pygame.mixer.init() # setup pygame mixer
 beatEffect = pygame.mixer.Sound('./sounds/kick.mp3')  # every beat this plays
