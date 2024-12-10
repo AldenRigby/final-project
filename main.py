@@ -59,30 +59,36 @@ LEVEL_SECONDS_PER_BEAT = 60/LEVEL_BPM
 #LEVEL_HITS_BEAT        = [0, 32, 48, 51.16, 59.16]
 #LEVEL_HITS_TIMING_BEAT = [4, 2,  1, .5,    .5]
 #                                                                                the drop V                                                                                                                                   #slowdown V
-LEVEL_HITS        = [0,    9.6, 14.4, 16.55, 17.75, 19.25, 21.65, 24.05, 26.15, 27.35, 28.8, 30,  31.2, 32.4, 33.6, 34.8, 36,  37.2, 38.4, 39.6, 40.8, 42,  43.2, 44.4, 45.6, 46.8, 48,  49.2, 50.4, 51.6, 52.8, 54,  55.2, 56.4, 57.6, 58.95, 60,  61.35,  62.4,  63.75]
-LEVEL_HITS_TIMING = [1.2, .6,  .3,   .15,   .15,   .3,   .3,   .3,      .15,   .15,   .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,   .15, .15,    .15,   .15]
+LEVEL_HITS        = [0,    9.6, 14.4, 16.55, 17.75, 19.25, 21.65, 24.05, 26.15, 27.35, 28.8, 30,  31.2, 32.4, 33.6, 34.8, 36,  37.2, 38.4, 39.6, 40.8, 42,  43.2, 44.4, 45.6, 46.8, 48,  49.2, 50.4, 51.6, 52.8, 54,  55.2, 56.4, 57.6, 58.95, 60,  61.35,  62.4,  63.75, 64.8, 65.85, 67.05, 68.05, 72.3]
+LEVEL_HITS_TIMING = [1.2, .6,  .3,   .15,   .15,   .3,   .3,   .3,      .15,   .15,   .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,   .15, .15,    .15,   .15,   .15,  .15,   .15,   .15,   .15]
+LEVEL_END = 74 #what time to end the level
 
 LEVEL_ACTUAL_HITS = [] # timing of when they actually have to hit
-for i in range(len(LEVEL_HITS)):
-    LEVEL_ACTUAL_HITS.append(LEVEL_HITS[i] + LEVEL_HITS_TIMING[i]*6)
 
 leniency = .1 #if hit is within this many seconds (+-) of a valid input then allow it
 hitOffset = 0 #offset for hit after beat
-beatOffset = 0 #offset for beat in relation to music
+beatOffset = -0.03 #offset for beat in relation to music
 #secondsPerBeat = .5 #how many seconds are in each "beat" of the song. replaced with levelhitstiming
 goodHits = 0 #how many times player got a good hit
 badHits = 0 #how many times player missed a note
 levelIndex = 0 #what hit the program is on
 playerIndex = 0 #what hit the player is on (this should always be lower than or equal to levelindex)
+gameRunning = True
 
 start = time.time() # set up the time at the start
-time.sleep(beatOffset)
+
+for i in range(len(LEVEL_HITS)):
+    LEVEL_ACTUAL_HITS.append(LEVEL_HITS[i] + LEVEL_HITS_TIMING[i]*6 + beatOffset)
+
 backgroundMusic.play()
 
 #set up graphics
-print("\nenter on the 7th beat\n")
-print("\n\n\n\n")
-sys.stdout.write("\033[5F")
+print("\nenter on the 7th beat")
+sys.stdout.write("\033[K")
+print("\n\n\n\n\n")
+for i in range(5):
+    sys.stdout.write("\033[F")
+    sys.stdout.write("\033[K")
 
 def getRuntime(): # this function returns how much time since the program started (useful for getting time on the level)
     return time.time() - start
@@ -141,6 +147,44 @@ def background(): # this function is always running in the backgroud. this lets 
             
         #time.sleep(secondsPerBeat)
 
+        if getRuntime() > LEVEL_END:
+
+            accuracy = goodHits/len(LEVEL_HITS)
+
+            print("\n\n\n\n")
+            for i in range(5):
+                sys.stdout.write("\033[F")
+                sys.stdout.write("\033[K")
+            print("Your rank:")
+            time.sleep(1.5)
+
+            if accuracy == 1:
+                print("S+")
+                time.sleep(1.5)
+                print("samurai says: you are a lifesaver")
+            elif accuracy > .9:
+                print("A")
+                time.sleep(1.5)
+                print("samurai says: you are maestro")
+            elif accuracy > .8:
+                print("B")
+                time.sleep(1.5)
+                print("samurai says: you are satisfactory")
+            elif accuracy > .7:
+                print("C")
+                time.sleep(1.5)
+                print("samurai says: try again please")
+            elif accuracy > .6:
+                print("D")
+                time.sleep(1.5)
+                print("samurai says: this is terrible form of alternative medicine")
+            else:
+                print("F")
+                time.sleep(1.5)
+                print("samurai says: are you awake")
+
+            quit()
+
         sys.stdout.flush()
 
 def handling_input(): # on player input
@@ -149,37 +193,45 @@ def handling_input(): # on player input
     foundHit = False
 
 #SOMETHING HERE TODO HELP AHHHHHHH REPLACE ALL i WITH TIHS VAR DOESNT WORK
-    currentLevelHit = LEVEL_ACTUAL_HITS[playerIndex]
 
-    if playerIndex <= levelIndex:
-        #if within a certain threshold, be nice and let them hit
-        if currentLevelHit + leniency > getRuntime() and currentLevelHit - leniency < getRuntime():
-            sys.stdout.write("\033[F")
-            sys.stdout.write("\033[K")
-            print(f"{getOffset(currentLevelHit)} good job you hit", end="\r")
-            playerIndex += 1
-            goodHits += 1
-            foundHit = True
-        #if too far away from the hit, count as a miss
-    if currentLevelHit + leniency * 3 > getRuntime() and currentLevelHit - leniency * 3 < getRuntime():
-        sys.stdout.write("\033[F")
-        sys.stdout.write("\033[K")
-        #checks if the player already missed this note by pressing early
+    if playerIndex < len(LEVEL_ACTUAL_HITS):
+        currentLevelHit = LEVEL_ACTUAL_HITS[playerIndex]
+
         if playerIndex <= levelIndex:
-            missEffect.play()
-            print(f"{getOffset(currentLevelHit)} that was close" + str(playerIndex) + str(levelIndex), end="\r")
-            playerIndex += 1
-            badHits += 1
-        else:
+            #if within a certain threshold, be nice and let them hit
+            if currentLevelHit + leniency > getRuntime() and currentLevelHit - leniency < getRuntime():
+                sys.stdout.write("\033[F")
+                sys.stdout.write("\033[K")
+                print(f"{getOffset(currentLevelHit)} good job you hit", end="\r")
+                playerIndex += 1
+                goodHits += 1
+                foundHit = True
+            #if too far away from the hit, count as a miss
+        if currentLevelHit + leniency * 4 > getRuntime() and currentLevelHit - leniency * 4 < getRuntime():
+            #checks if the player already missed this note by pressing early
+
+            if foundHit:
+                print("", end="\r")
+            elif playerIndex <= levelIndex:
+                sys.stdout.write("\033[F")
+                sys.stdout.write("\033[K")
+                missEffect.play()
+                print(f"{getOffset(currentLevelHit)} that was close" + str(playerIndex) + str(levelIndex), end="\r")
+                playerIndex += 1
+                badHits += 1
+                foundHit = True
+            else:
+                sys.stdout.write("\033[F")
+                sys.stdout.write("\033[K")
+                blipEffect.play()
+                print("    already got that note" + str(playerIndex) + str(levelIndex), end="\r")
+            
+        #if no hit then bleh
+        if not foundHit:
+            sys.stdout.write("\033[F")
             blipEffect.play()
-            print("    already got that note" + str(playerIndex) + str(levelIndex), end="\r")
-        foundHit = True
-    #if no hit then bleh
-    if not foundHit:
-        sys.stdout.write("\033[F")
-        blipEffect.play()
-        print("    not even close buddy     ", end="\r")
-        #badHits = badHits + 1
+            print("    not even close buddy     ", end="\r")
+            #badHits = badHits + 1
     updateScore()
 
 #setup the background (idk how this works but stackoverflow does)
@@ -189,7 +241,7 @@ t.start()
 
 updateScore()
 #check on userinputs
-while True:
+while gameRunning:
     #input stuff
     inp = input()
     handling_input()
@@ -198,4 +250,3 @@ while True:
         print('quitting')
         backgroundMusic.stop()
         sys.exit()
-
