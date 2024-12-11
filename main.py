@@ -26,22 +26,6 @@ clock = pygame.time.Clock()
 game = Game('img/column2.png', 'img/cursor.jpg', 'img/background2.jpg')
 game.resize_images()
 
-while True:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit
-    
-    game.show_background(screen)
-    game.show_colums(screen)
-
-
-    if game.active:
-        game.show_cursor(screen)
-
-    pygame.display.update()
-    clock.tick(120)
-
 pygame.mixer.init() # setup pygame mixer
 beatEffect = pygame.mixer.Sound('./sounds/kick.mp3')  # every beat this plays
 backgroundMusic = pygame.mixer.Sound('./sounds/Samurai Techno.mp3')  # music
@@ -142,6 +126,26 @@ def updateScore():
 def background(): # this function is always running in the backgroud. this lets things happen while we .sleep() or input()
     global levelIndex, playerIndex, badHits, accuracyList
     while True:
+        
+        #pygame stuff
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit
+        
+        game.show_background(screen)
+        game.show_colums(screen)
+
+
+        if game.active:
+            game.show_cursor(screen)
+
+        pygame.display.update()
+        clock.tick(120)
+
+
+        #other stuff
+
         #sys.stdout.write("\033[K") #this line clears all i think
         #print(x, end='\r')
         #if the time passes by a timestamp then activate that hit
