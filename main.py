@@ -26,14 +26,6 @@ clock = pygame.time.Clock()
 game = Game('img/column2.png', 'img/cursor.jpg', 'img/background2.jpg')
 game.resize_images()
 
-pygame.mixer.init() # setup pygame mixer
-beatEffect = pygame.mixer.Sound('./sounds/kick.mp3')  # every beat this plays
-backgroundMusic = pygame.mixer.Sound('./sounds/Samurai Techno.mp3')  # music
-blipEffect = pygame.mixer.Sound('./sounds/blip.mp3')  # when player makes input not anywhere near the actual hit
-hitEffect = pygame.mixer.Sound('./sounds/hit.mp3')  # plays when player is supposed to hit
-missEffect = pygame.mixer.Sound('./sounds/miss.mp3')  # miss
-#drumEffect = pygame.mixer.Sound('./sounds/drum.mp3')  # if player hits right then this should play soon after
-
 
 
 
@@ -71,7 +63,6 @@ for i in range(len(LEVEL_HITS)):
     LEVEL_ACTUAL_HITS.append(LEVEL_HITS[i] + LEVEL_HITS_TIMING[i]*6 + beatOffset)
 
 
-backgroundMusic.play()
 
 
 #set up graphics
@@ -125,6 +116,24 @@ def background(): # this function is always running in the background. this lets
     while True:
 
         #pygame stuff
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN and game.active:
+                    handling_input()
+
+                if event.key == pygame.K_SPACE and game.active == False:
+                    game.restart()
+        
+        game.show_background(screen)
+        game.show_colums(screen)
+
+
+        pygame.display.update()
+        clock.tick(60)
+
 
         #other stuff
 

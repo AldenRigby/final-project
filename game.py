@@ -25,6 +25,16 @@ class Game:
         self.background = pygame.image.load(background_img).convert_alpha()
         self.active = True
         self.font = pygame.font.SysFont(None, 48)
+        pygame.mixer.init() # setup pygame mixer
+        self.beatEffect = pygame.mixer.Sound('./sounds/kick.mp3')  # every beat this plays
+        self.backgroundMusic = pygame.mixer.Sound('./sounds/Samurai Techno.mp3')  # music
+        self.blipEffect = pygame.mixer.Sound('./sounds/blip.mp3')  # when player makes input not anywhere near the actual hit
+        self.hitEffect = pygame.mixer.Sound('./sounds/hit.mp3')  # plays when player is supposed to hit
+        self.missEffect = pygame.mixer.Sound('./sounds/miss.mp3')  # miss
+        #drumEffect = pygame.mixer.Sound('./sounds/drum.mp3')  # if player hits right then this should play soon after
+
+        self.backgroundMusic.play()
+
 
 
     def resize_images(self):
@@ -54,8 +64,11 @@ class Game:
         for i in range(len(self.columns)):
             screen.blit(self.columns[i], (i*70+85, 140)) 
 
-    def show_cursor(self, screen, x):
-        screen.blit(self.cursor, (x*70+85, 125))
+    def show_cursor(self, screen):
+        screen.blit(self.cursor, (85, 125))
+
+    def show_cursor(self):
+        self.cursor.centerx += 155
 
     def game_over(self, screen, color):
         self.show_score("game_over", screen, color)
