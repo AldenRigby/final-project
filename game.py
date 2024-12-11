@@ -56,3 +56,9 @@ class Game:
 
     def show_cursor(self, screen):
         screen.blit(self.cursor, (85, 125))
+
+    def game_over(self, screen, color):
+        self.show_score("game_over", screen, color)
+
+    def restart(self):
+        self.active = True
