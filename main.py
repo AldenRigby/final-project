@@ -81,6 +81,8 @@ def getOffset(time): #this function returns how off you were in ms
     return int((getRuntime() - time - hitOffset)*1000)
 
 def startHit(index): # this function starts a 1234567 thing
+    
+    game.show_cursor(screen)
     for i in range(7):
         sys.stdout.write(f"""
   {"     "*i}{i+1}
@@ -99,7 +101,7 @@ def startHit(index): # this function starts a 1234567 thing
             time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
 
         if game.active:
-            game.update_cursor(screen)
+            game.update_cursor()
 
     #move cursor using i
 
@@ -130,7 +132,6 @@ def background(): # this function is always running in the background. this lets
         
         game.show_background(screen)
         game.show_colums(screen)
-        game.show_cursor(screen)
 
 
         pygame.display.update()
