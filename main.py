@@ -45,6 +45,8 @@ missEffect = pygame.mixer.Sound('./sounds/miss.mp3')  # miss
 #drumEffect = pygame.mixer.Sound('./sounds/drum.mp3')  # if player hits right then this should play soon after
 
 
+
+
 #how many seconds after program runs to start a 7 thing. //
 #how many seconds between beats for the 7 hit above thingy
 #samurai techno is 200 bpm. .6 for fast, .3 for medium, .15 for fast
@@ -53,11 +55,13 @@ LEVEL_SECONDS_PER_BEAT = 60/LEVEL_BPM
 #LEVEL_HITS_BEAT        = [0, 32, 48, 51.16, 59.16]
 #LEVEL_HITS_TIMING_BEAT = [4, 2,  1, .5,    .5]
 #                                                                                the drop V                                                                                                                                   #slowdown V
-LEVEL_HITS        = [0,    9.6, 14.4, 16.55, 17.75, 19.25, 21.65, 24.05, 26.15, 27.35, 28.8, 30,  31.2, 32.4, 33.6, 34.8, 36,  37.2, 38.4, 39.6, 40.8, 42,  43.2, 44.4, 45.6, 46.8, 48,  49.2, 50.4, 51.6, 52.8, 54,  55.2, 56.4, 57.6, 58.95, 60,  61.35,  62.4,  63.75, 64.8, 65.85, 67.05, 68.05, 72.3]
+LEVEL_HITS        = [0,    9.6, 14.4, 16.55, 17.75, 19.25, 21.65, 24.05, 26.15, 27.35, 28.8, 30,  31.2, 32.4, 33.6, 34.8, 36,  37.2, 38.4, 39.6, 40.8, 42,  43.2, 44.4, 45.6, 46.8, 48,  49.2, 50.4, 51.6, 52.8, 54,  55.2, 56.4, 57.6, 58.95, 60,  61.35,  62.4,  63.75, 64.8, 65.85, 67.05, 68.25, 72.3]
 LEVEL_HITS_TIMING = [1.2, .6,  .3,   .15,   .15,   .3,   .3,   .3,      .15,   .15,   .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,   .15, .15,    .15,   .15,   .15,  .15,   .15,   .15,   .15]
 LEVEL_END = 74 #what time to end the level
 
+
 LEVEL_ACTUAL_HITS = [] # timing of when they actually have to hit
+
 
 leniency = .1 #if hit is within this many seconds (+-) of a valid input then allow it
 hitOffset = 0 #offset for hit after beat
@@ -67,14 +71,18 @@ goodHits = 0 #how many times player got a good hit
 badHits = 0 #how many times player missed a note
 levelIndex = 0 #what hit the program is on
 playerIndex = 0 #what hit the player is on (this should always be lower than or equal to levelindex)
-gameRunning = True
+accuracyList = [] #list of offsets
+
 
 start = time.time() # set up the time at the start
+
 
 for i in range(len(LEVEL_HITS)):
     LEVEL_ACTUAL_HITS.append(LEVEL_HITS[i] + LEVEL_HITS_TIMING[i]*6 + beatOffset)
 
+
 backgroundMusic.play()
+
 
 #set up graphics
 print("\nenter on the 7th beat")
@@ -84,11 +92,14 @@ for i in range(5):
     sys.stdout.write("\033[F")
     sys.stdout.write("\033[K")
 
+
 def getRuntime(): # this function returns how much time since the program started (useful for getting time on the level)
     return time.time() - start
 
+
 def getOffset(time): #this function returns how off you were in ms
-    return str(int((getRuntime() - time - hitOffset)*1000)) + "ms"
+    return int((getRuntime() - time - hitOffset)*1000)
+
 
 def startHit(index): # this function starts a 1234567 thing
     for i in range(7):
@@ -104,10 +115,13 @@ def startHit(index): # this function starts a 1234567 thing
         else:
             hitEffect.play()
 
+
         if i < 7:
             time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
 
+
     #move cursor using i
+
 
 def updateScore():
     #print score
@@ -117,8 +131,10 @@ def updateScore():
     sys.stdout.write("\033[7F")
 
 
+
+
 def background(): # this function is always running in the backgroud. this lets things happen while we .sleep() or input()
-    global levelIndex, playerIndex, badHits
+    global levelIndex, playerIndex, badHits, accuracyList
     while True:
         #sys.stdout.write("\033[K") #this line clears all i think
         #print(x, end='\r')
@@ -129,74 +145,114 @@ def background(): # this function is always running in the backgroud. this lets 
                 startHit(levelIndex)
                 levelIndex = levelIndex + 1
 
+
         if playerIndex < len(LEVEL_ACTUAL_HITS) and playerIndex <= levelIndex:
             if LEVEL_ACTUAL_HITS[playerIndex] < getRuntime() + leniency * 4:
                 #sys.stdout.write("\033[F")
                 sys.stdout.write("\033[K")
-                print("    missed ...." + str(playerIndex) + str(levelIndex), end="\r")
+                print("    Missed beat", end="\r")
                 missEffect.play()
                 playerIndex += 1
                 badHits += 1
                 updateScore()
-            
+           
         #time.sleep(secondsPerBeat)
+
 
         if getRuntime() > LEVEL_END:
 
+
             accuracy = goodHits/len(LEVEL_HITS)
+
 
             print("\n\n\n\n")
             for i in range(5):
                 sys.stdout.write("\033[F")
                 sys.stdout.write("\033[K")
             print("Your rank:")
-            time.sleep(1.5)
+
+
+            waitTime = 1.5
+
+
+            time.sleep(waitTime)
+
 
             if accuracy == 1:
                 print("S+")
-                time.sleep(1.5)
+                time.sleep(waitTime)
                 print("samurai says: you are a lifesaver")
             elif accuracy > .9:
                 print("A")
-                time.sleep(1.5)
+                time.sleep(waitTime)
                 print("samurai says: you are maestro")
             elif accuracy > .8:
                 print("B")
-                time.sleep(1.5)
+                time.sleep(waitTime)
                 print("samurai says: you are satisfactory")
             elif accuracy > .7:
                 print("C")
-                time.sleep(1.5)
+                time.sleep(waitTime)
                 print("samurai says: try again please")
             elif accuracy > .6:
                 print("D")
-                time.sleep(1.5)
+                time.sleep(waitTime)
                 print("samurai says: this is terrible form of alternative medicine")
             else:
                 print("F")
-                time.sleep(1.5)
+                time.sleep(waitTime)
                 print("samurai says: are you awake")
+               
+            time.sleep(waitTime)
+            print("Average accuracy: ", end="")
+            time.sleep(waitTime)
+            absAccuracyList = []
+            for i in accuracyList:
+                absAccuracyList.append(abs(i))
+            print(str(round(sum(absAccuracyList)/len(absAccuracyList))) + "ms")
 
-            quit()
+
+            exit("Game end")
+
 
         sys.stdout.flush()
+
+
+def printOnHit(offset):
+    hitOrMiss = ""
+    if -leniency*1000 < offset < leniency*1000:
+        hitOrMiss = "   HIT!  "
+        global accuracyList
+        accuracyList.append(offset)
+    else:
+        hitOrMiss = "   MISS! "
+    if offset < 0:
+        return hitOrMiss + "Early by " + str(-offset) + "ms."
+    elif offset > 0:
+        return hitOrMiss + " Late by " + str(offset) + "ms."
+    else:
+        return hitOrMiss + "Perfect!"
+
 
 def handling_input(): # on player input
     global goodHits, badHits, playerIndex, levelIndex
     #check every allowed hit in the level
     foundHit = False
 
+
 #SOMETHING HERE TODO HELP AHHHHHHH REPLACE ALL i WITH TIHS VAR DOESNT WORK
+
 
     if playerIndex < len(LEVEL_ACTUAL_HITS):
         currentLevelHit = LEVEL_ACTUAL_HITS[playerIndex]
+
 
         if playerIndex <= levelIndex:
             #if within a certain threshold, be nice and let them hit
             if currentLevelHit + leniency > getRuntime() and currentLevelHit - leniency < getRuntime():
                 sys.stdout.write("\033[F")
                 sys.stdout.write("\033[K")
-                print(f"{getOffset(currentLevelHit)} good job you hit", end="\r")
+                print(printOnHit(getOffset(currentLevelHit)), end="\r")
                 playerIndex += 1
                 goodHits += 1
                 foundHit = True
@@ -204,13 +260,14 @@ def handling_input(): # on player input
         if currentLevelHit + leniency * 4 > getRuntime() and currentLevelHit - leniency * 4 < getRuntime():
             #checks if the player already missed this note by pressing early
 
+
             if foundHit:
                 print("", end="\r")
             elif playerIndex <= levelIndex:
                 sys.stdout.write("\033[F")
                 sys.stdout.write("\033[K")
                 missEffect.play()
-                print(f"{getOffset(currentLevelHit)} that was close" + str(playerIndex) + str(levelIndex), end="\r")
+                print(printOnHit(getOffset(currentLevelHit)), end="\r")
                 playerIndex += 1
                 badHits += 1
                 foundHit = True
@@ -218,8 +275,8 @@ def handling_input(): # on player input
                 sys.stdout.write("\033[F")
                 sys.stdout.write("\033[K")
                 blipEffect.play()
-                print("    already got that note" + str(playerIndex) + str(levelIndex), end="\r")
-            
+                print(printOnHit(getOffset(currentLevelHit)), end="\r")
+           
         #if no hit then bleh
         if not foundHit:
             sys.stdout.write("\033[F")
@@ -228,14 +285,16 @@ def handling_input(): # on player input
             #badHits = badHits + 1
     updateScore()
 
+
 #setup the background (idk how this works but stackoverflow does)
 t = threading.Thread(target=background)
 t.daemon = True
 t.start()
 
+
 updateScore()
 #check on userinputs
-while gameRunning:
+while True:
     #input stuff
     inp = input()
     handling_input()
