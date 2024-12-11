@@ -54,8 +54,8 @@ class Game:
         for i in range(len(self.columns)):
             screen.blit(self.columns[i], (i*70+85, 140)) 
 
-    def show_cursor(self, screen):
-        screen.blit(self.cursor, (85, 125))
+    def show_cursor(self, screen, x):
+        screen.blit(self.cursor, (x*70+85, 125))
 
     def game_over(self, screen, color):
         self.show_score("game_over", screen, color)

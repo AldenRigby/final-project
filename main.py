@@ -26,14 +26,6 @@ clock = pygame.time.Clock()
 game = Game('img/column2.png', 'img/cursor.jpg', 'img/background2.jpg')
 game.resize_images()
 
-
-if event.type == pygame.KEYDOWN:
-    if event.key == pygame.K_RETURN and game.active:
-        handling_input()
-
-    if event.key == pygame.K_SPACE and game.active == False:
-        game.restart()
-
 pygame.mixer.init() # setup pygame mixer
 beatEffect = pygame.mixer.Sound('./sounds/kick.mp3')  # every beat this plays
 backgroundMusic = pygame.mixer.Sound('./sounds/Samurai Techno.mp3')  # music
@@ -117,6 +109,8 @@ def startHit(index): # this function starts a 1234567 thing
         if i < 7:
             time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
 
+        if game.active:
+            game.show_cursor(screen, i)
 
     #move cursor using i
 
@@ -131,25 +125,22 @@ def updateScore():
 
 
 
-def background(): # this function is always running in the backgroud. this lets things happen while we .sleep() or input()
-    global levelIndex, playerIndex, badHits, accuracyList
+def background(): # this function is always running in the background. this lets things happen while we .sleep() or input()
+    global levelIndex, playerIndex, badHits, accuracyList, game
     while True:
-        
+
         #pygame stuff
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                sys.exit
+                sys.exit()
         
         game.show_background(screen)
         game.show_colums(screen)
 
 
-        if game.active:
-            game.show_cursor(screen)
-
         pygame.display.update()
-        clock.tick(120)
+        clock.tick(60)
 
 
         #other stuff
