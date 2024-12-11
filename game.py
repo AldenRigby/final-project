@@ -33,7 +33,6 @@ class Game:
         self.missEffect = pygame.mixer.Sound('./sounds/miss.mp3')  # miss
         #drumEffect = pygame.mixer.Sound('./sounds/drum.mp3')  # if player hits right then this should play soon after
 
-        self.backgroundMusic.play()
 
 
 
@@ -67,7 +66,7 @@ class Game:
     def show_cursor(self, screen):
         screen.blit(self.cursor, (85, 125))
 
-    def show_cursor(self):
+    def update_cursor(self):
         self.cursor.centerx += 155
 
     def game_over(self, screen, color):

@@ -63,6 +63,7 @@ for i in range(len(LEVEL_HITS)):
     LEVEL_ACTUAL_HITS.append(LEVEL_HITS[i] + LEVEL_HITS_TIMING[i]*6 + beatOffset)
 
 
+game.backgroundMusic.play()
 
 
 #set up graphics
@@ -89,16 +90,16 @@ def startHit(index): # this function starts a 1234567 thing
         sys.stdout.flush()
         time.sleep(hitOffset)
         if i < 6:
-            beatEffect.play()
+            game.beatEffect.play()
         else:
-            hitEffect.play()
+            game.hitEffect.play()
 
 
         if i < 7:
             time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
 
         if game.active:
-            game.show_cursor(screen, i)
+            game.update_cursor(screen)
 
     #move cursor using i
 
@@ -129,6 +130,7 @@ def background(): # this function is always running in the background. this lets
         
         game.show_background(screen)
         game.show_colums(screen)
+        game.show_cursor(screen)
 
 
         pygame.display.update()
@@ -152,7 +154,7 @@ def background(): # this function is always running in the background. this lets
                 #sys.stdout.write("\033[F")
                 sys.stdout.write("\033[K")
                 print("    Missed beat", end="\r")
-                missEffect.play()
+                game.missEffect.play()
                 playerIndex += 1
                 badHits += 1
                 updateScore()
@@ -258,7 +260,7 @@ def handling_input(): # on player input
             elif playerIndex <= levelIndex:
                 sys.stdout.write("\033[F")
                 sys.stdout.write("\033[K")
-                missEffect.play()
+                game.missEffect.play()
                 print(printOnHit(getOffset(currentLevelHit)), end="\r")
                 playerIndex += 1
                 badHits += 1
@@ -266,13 +268,13 @@ def handling_input(): # on player input
             else:
                 sys.stdout.write("\033[F")
                 sys.stdout.write("\033[K")
-                blipEffect.play()
+                game.blipEffect.play()
                 print(printOnHit(getOffset(currentLevelHit)), end="\r")
            
         #if no hit then bleh
         if not foundHit:
             sys.stdout.write("\033[F")
-            blipEffect.play()
+            game.blipEffect.play()
             print("    not even close buddy     ", end="\r")
             #badHits = badHits + 1
     updateScore()
