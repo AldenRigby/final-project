@@ -82,14 +82,11 @@ for i in range(5):
     sys.stdout.write("\033[F")
     sys.stdout.write("\033[K")
 
-
 def getRuntime(): # this function returns how much time since the program started (useful for getting time on the level)
     return time.time() - start
 
-
 def getOffset(time): #this function returns how off you were in ms
     return int((getRuntime() - time - hitOffset)*1000)
-
 
 def startHit(index): # this function starts a 1234567 thing
     for i in range(7):
@@ -114,7 +111,6 @@ def startHit(index): # this function starts a 1234567 thing
 
     #move cursor using i
 
-
 def updateScore():
     #print score
     print("\n\n\n\n")
@@ -124,24 +120,11 @@ def updateScore():
 
 
 
-
 def background(): # this function is always running in the background. this lets things happen while we .sleep() or input()
     global levelIndex, playerIndex, badHits, accuracyList, game
     while True:
 
         #pygame stuff
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-        
-        game.show_background(screen)
-        game.show_colums(screen)
-
-
-        pygame.display.update()
-        clock.tick(60)
-
 
         #other stuff
 
@@ -170,9 +153,7 @@ def background(): # this function is always running in the background. this lets
 
         if getRuntime() > LEVEL_END:
 
-
             accuracy = goodHits/len(LEVEL_HITS)
-
 
             print("\n\n\n\n")
             for i in range(5):
@@ -180,12 +161,9 @@ def background(): # this function is always running in the background. this lets
                 sys.stdout.write("\033[K")
             print("Your rank:")
 
-
             waitTime = 1.5
 
-
             time.sleep(waitTime)
-
 
             if accuracy == 1:
                 print("S+")
@@ -220,12 +198,9 @@ def background(): # this function is always running in the background. this lets
                 absAccuracyList.append(abs(i))
             print(str(round(sum(absAccuracyList)/len(absAccuracyList))) + "ms")
 
-
             exit("Game end")
 
-
         sys.stdout.flush()
-
 
 def printOnHit(offset):
     hitOrMiss = ""
@@ -241,7 +216,6 @@ def printOnHit(offset):
         return hitOrMiss + " Late by " + str(offset) + "ms."
     else:
         return hitOrMiss + "Perfect!"
-
 
 def handling_input(): # on player input
     global goodHits, badHits, playerIndex, levelIndex
@@ -294,7 +268,6 @@ def handling_input(): # on player input
             #badHits = badHits + 1
     updateScore()
 
-
 #setup the background (idk how this works but stackoverflow does)
 t = threading.Thread(target=background)
 t.daemon = True
@@ -304,11 +277,25 @@ t.start()
 updateScore()
 #check on userinputs
 while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == pygame.KEYDOWN:
+            #blipEffect.play()
+            handling_input()
+
+    game.show_background(screen)
+    game.show_colums(screen)    
+
+    pygame.display.update()
+    clock.tick(60)
+
     #input stuff
-    inp = input()
-    handling_input()
-    if inp == 'q':
-        sys.stdout.write("\033[K")
-        print('quitting')
-        backgroundMusic.stop()
-        sys.exit()
+    #inp = input()
+    #handling_input()
+    #if inp == 'q':
+     #   sys.stdout.write("\033[K")
+      #  print('quitting')
+       # backgroundMusic.stop()
+        #sys.exit()
