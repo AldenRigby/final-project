@@ -26,14 +26,6 @@ clock = pygame.time.Clock()
 game = Game('img/column2.png', 'img/cursor.jpg', 'img/background2.jpg')
 game.resize_images()
 
-
-if event.type == pygame.KEYDOWN:
-    if event.key == pygame.K_RETURN and game.active:
-        handling_input()
-
-    if event.key == pygame.K_SPACE and game.active == False:
-        game.restart()
-
 pygame.mixer.init() # setup pygame mixer
 beatEffect = pygame.mixer.Sound('./sounds/kick.mp3')  # every beat this plays
 backgroundMusic = pygame.mixer.Sound('./sounds/Samurai Techno.mp3')  # music
@@ -140,6 +132,12 @@ def background(): # this function is always running in the backgroud. this lets 
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN and game.active:
+                    handling_input()
+
+                if event.key == pygame.K_SPACE and game.active == False:
+                    game.restart()
         
         game.show_background(screen)
         game.show_colums(screen)
