@@ -100,11 +100,12 @@ def startHit(index): # this function starts a 1234567 thing
 
         if i < 7:
             if game.active:
-                game.show_background(screen)
-                game.show_colums(screen)
-
+                red = (100, 0, 5)
                 teal = (0, 244, 207)
                 font = pygame.font.Font('freesansbold.ttf', 16)
+                game.show_background(screen)
+                screen.blit((font.render("Enter on the 7th beat", True, teal)), (25, 50))
+                game.show_colums(screen)
 
                 game.update_cursor(screen, i)
                 for i in range(1, 8):
