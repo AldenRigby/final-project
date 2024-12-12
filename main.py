@@ -102,6 +102,7 @@ def startHit(index): # this function starts a 1234567 thing
             time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
         if game.active:
             game.show_background(screen)
+            
             game.show_colums(screen)
             teal = (0, 244, 207)
             font = pygame.font.Font('freesansbold.ttf', 16)
