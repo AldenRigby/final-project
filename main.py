@@ -64,6 +64,9 @@ for i in range(len(LEVEL_HITS)):
 
 
 game.backgroundMusic.play()
+        
+game.show_background(screen)
+game.show_colums(screen)
 
 
 #set up graphics
@@ -82,8 +85,6 @@ def getOffset(time): #this function returns how off you were in ms
 
 def startHit(index): # this function starts a 1234567 thing
     
-    game.show_cursor(screen)
-    
     for i in range(7):
         sys.stdout.write(f"""
   {"     "*i}{i+1}
@@ -101,8 +102,12 @@ def startHit(index): # this function starts a 1234567 thing
         if i < 7:
             time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
             if game.active:
-                game.update_cursor()
+                game.show_background(screen)
+                game.show_colums(screen)
+                game.update_cursor(screen, i+1)
 
+    
+    game.show_cursor(screen)
     #move cursor using i
 
 def updateScore():
@@ -129,9 +134,6 @@ def background(): # this function is always running in the background. this lets
 
                 if event.key == pygame.K_SPACE and game.active == False:
                     game.restart()
-        
-        game.show_background(screen)
-        game.show_colums(screen)
 
 
         pygame.display.update()
@@ -216,7 +218,7 @@ def background(): # this function is always running in the background. this lets
 
 def printOnHit(offset):
     hitOrMiss = ""
-    if -leniency*1000 < offset < leniency*1000:
+    if -leniency*1000 <= offset <= leniency*1000:
         hitOrMiss = "   HIT!  "
         global accuracyList
         accuracyList.append(offset)
@@ -295,10 +297,7 @@ while True:
             sys.exit()
         if event.type == pygame.KEYDOWN:
             #blipEffect.play()
-            handling_input()
-
-    game.show_background(screen)
-    game.show_colums(screen)    
+            handling_input()  
 
     pygame.display.update()
     clock.tick(60)

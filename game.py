@@ -67,8 +67,8 @@ class Game:
     def show_cursor(self, screen):
         screen.blit(self.cursor, (85, 125))
 
-    def update_cursor(self):
-        self.cursorRect.centerx += 70
+    def update_cursor(self, screen, i):
+        screen.blit(self.cursor, (i*70 + 85, 125))
 
     def game_over(self, screen, color):
         self.show_score("game_over", screen, color)
