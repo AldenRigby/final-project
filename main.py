@@ -101,10 +101,10 @@ def startHit(index): # this function starts a 1234567 thing
 
         if i < 7:
             time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
-            if game.active:
-                game.show_background(screen)
-                game.show_colums(screen)
-                game.update_cursor(screen, i+1)
+        if game.active:
+            game.show_background(screen)
+            game.show_colums(screen)
+            game.update_cursor(screen, i+1)
 
     
     game.show_cursor(screen)
