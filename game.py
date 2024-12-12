@@ -54,6 +54,7 @@ class Game:
         self.columns.append(self.column7)
 
         self.cursor = pygame.transform.scale(self.cursor, (20, 10))
+        self.cursorRect = self.cursor.get_rect(midtop = (85, 125))
         self.background = pygame.transform.scale(self.background, (600, 500))
 
     def show_background(self, screen):
@@ -67,7 +68,7 @@ class Game:
         screen.blit(self.cursor, (85, 125))
 
     def update_cursor(self):
-        self.cursor.centerx += 155
+        self.cursorRect.centerx += 70
 
     def game_over(self, screen, color):
         self.show_score("game_over", screen, color)

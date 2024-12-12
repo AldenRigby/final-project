@@ -83,6 +83,7 @@ def getOffset(time): #this function returns how off you were in ms
 def startHit(index): # this function starts a 1234567 thing
     
     game.show_cursor(screen)
+    
     for i in range(7):
         sys.stdout.write(f"""
   {"     "*i}{i+1}
@@ -99,9 +100,8 @@ def startHit(index): # this function starts a 1234567 thing
 
         if i < 7:
             time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
-
-        if game.active:
-            game.update_cursor()
+            if game.active:
+                game.update_cursor()
 
     #move cursor using i
 
