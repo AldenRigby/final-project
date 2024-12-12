@@ -104,6 +104,10 @@ def startHit(index): # this function starts a 1234567 thing
         if game.active:
             game.show_background(screen)
             game.show_colums(screen)
+            teal = (0, 244, 207)
+            font = pygame.font.Font('freesansbold.ttf', 16)
+            for i in range(1, 8):
+                screen.blit((font.render(str(i), True, teal)), ((i-1)*70+90, 120))
             game.update_cursor(screen, i+1)
 
     
