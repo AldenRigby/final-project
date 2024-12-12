@@ -1,8 +1,10 @@
 import pygame
+import time
 
 class Game:
     def __init__(self, column_img, cursor_img, background_img):
         #setup all 7 columns
+        self.startTime = 0
         self.columns = []
         for i in range(7):
             self.columns.append(pygame.image.load(column_img).convert_alpha())
@@ -19,9 +21,6 @@ class Game:
         self.hitEffect = pygame.mixer.Sound('./sounds/hit.mp3')  # plays when player is supposed to hit
         self.missEffect = pygame.mixer.Sound('./sounds/miss.mp3')  # miss
         #drumEffect = pygame.mixer.Sound('./sounds/drum.mp3')  # if player hits right then this should play soon after
-
-
-
 
     def resize_images(self):
         for i in range(7):
@@ -47,5 +46,11 @@ class Game:
     def game_over(self, screen, color):
         self.show_score("game_over", screen, color)
 
-    def restart(self):
+    def start(self):
+        self.backgroundMusic.stop()
+        self.backgroundMusic.play()
         self.active = True
+        self.startTime = time.time()
+
+    def end(self):
+        self.backgroundMusic.stop()

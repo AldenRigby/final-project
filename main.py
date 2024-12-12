@@ -56,14 +56,12 @@ playerIndex = 0 #what hit the player is on (this should always be lower than or 
 accuracyList = [] #list of offsets
 
 
-start = time.time() # set up the time at the start
+#start = time.time() # set up the time at the start
 
 
 for i in range(len(LEVEL_HITS)):
     LEVEL_ACTUAL_HITS.append(LEVEL_HITS[i] + LEVEL_HITS_TIMING[i]*6 + beatOffset)
 
-
-game.backgroundMusic.play()
         
 game.show_background(screen)
 game.show_colums(screen)
@@ -78,7 +76,7 @@ for i in range(5):
     sys.stdout.write("\033[K")
 
 def getRuntime(): # this function returns how much time since the program started (useful for getting time on the level)
-    return time.time() - start
+    return time.time() - game.startTime
 
 def getOffset(time): #this function returns how off you were in ms
     return int((getRuntime() - time - hitOffset)*1000)
@@ -109,6 +107,8 @@ def startHit(index): # this function starts a 1234567 thing
                 game.update_cursor(screen, i)
                 for i in range(1, 8):
                     screen.blit((font.render(str(i), True, teal)), ((i-1)*70+90, 120))
+            else:
+                return
             time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
 
     #move cursor using i
@@ -290,6 +290,7 @@ t = threading.Thread(target=background)
 t.daemon = True
 t.start()
 
+game.start()
 
 updateScore()
 #check on userinputs
