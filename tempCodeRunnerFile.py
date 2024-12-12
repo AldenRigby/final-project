@@ -1,2 +1,1 @@
-)
-game.show_colums(screen)
+https://rhythmdr.com/cny/

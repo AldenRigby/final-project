@@ -2,23 +2,10 @@ import pygame
 
 class Game:
     def __init__(self, column_img, cursor_img, background_img):
-        self.column1 = pygame.image.load(column_img).convert_alpha()
-        self.column2 = pygame.image.load(column_img).convert_alpha()
-        self.column3 = pygame.image.load(column_img).convert_alpha()
-        self.column4 = pygame.image.load(column_img).convert_alpha()
-        self.column5 = pygame.image.load(column_img).convert_alpha()
-        self.column6 = pygame.image.load(column_img).convert_alpha()
-        self.column7 = pygame.image.load(column_img).convert_alpha()
+        #setup all 7 columns
         self.columns = []
-        """""
-        self.columns.append(self.column1)
-        self.columns.append(self.column2)
-        self.columns.append(self.column3)
-        self.columns.append(self.column4)
-        self.columns.append(self.column5)
-        self.columns.append(self.column6)
-        self.columns.append(self.column7)
-        """
+        for i in range(7):
+            self.columns.append(pygame.image.load(column_img).convert_alpha())
 
         self.cursor = pygame.image.load(cursor_img).convert_alpha()
        # self.cursor_rect = self.cursor.get_rect(center = (, ))
@@ -37,24 +24,11 @@ class Game:
 
 
     def resize_images(self):
-        #for column in self.columns:
-        self.column1 = pygame.transform.scale(self.column1, (20, 200)) #probably have to change later
-        self.column2 = pygame.transform.scale(self.column2, (20, 200))
-        self.column3 = pygame.transform.scale(self.column3, (20, 200))
-        self.column4 = pygame.transform.scale(self.column4, (20, 200))
-        self.column5 = pygame.transform.scale(self.column5, (20, 200))
-        self.column6 = pygame.transform.scale(self.column6, (20, 200))
-        self.column7 = pygame.transform.scale(self.column7, (20, 200))
-        self.columns.append(self.column1)
-        self.columns.append(self.column2)
-        self.columns.append(self.column3)
-        self.columns.append(self.column4)
-        self.columns.append(self.column5)
-        self.columns.append(self.column6)
-        self.columns.append(self.column7)
+        for i in range(7):
+            self.columns[i] = pygame.transform.rotozoom(self.columns[i], 90, 1)
+            self.columns[i] = pygame.transform.scale(self.columns[i], (40, 200))
 
-        self.cursor = pygame.transform.scale(self.cursor, (20, 10))
-        self.cursorRect = self.cursor.get_rect(midtop = (85, 125))
+        self.cursor = pygame.transform.scale(self.cursor, (40, 40))
         self.background = pygame.transform.scale(self.background, (600, 500))
 
     def show_background(self, screen):
@@ -68,7 +42,7 @@ class Game:
         screen.blit(self.cursor, (85, 125))
 
     def update_cursor(self, screen, i):
-        screen.blit(self.cursor, (i*70 + 85, 125))
+        screen.blit(self.cursor, (i*70 + 84, 220))
 
     def game_over(self, screen, color):
         self.show_score("game_over", screen, color)

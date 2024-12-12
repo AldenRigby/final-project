@@ -23,7 +23,7 @@ pygame.init()
 screen = pygame.display.set_mode((600, 500))
 clock = pygame.time.Clock()
 
-game = Game('img/column2.png', 'img/cursor.jpg', 'img/background2.jpg')
+game = Game('img/column3.png', 'img/cursor.png', 'img/background2.jpg')
 game.resize_images()
 
 
@@ -45,9 +45,9 @@ LEVEL_END = 74 #what time to end the level
 LEVEL_ACTUAL_HITS = [] # timing of when they actually have to hit
 
 
-leniency = .1 #if hit is within this many seconds (+-) of a valid input then allow it
+leniency = .12 #if hit is within this many seconds (+-) of a valid input then allow it
 hitOffset = 0 #offset for hit after beat
-beatOffset = -0.03 #offset for beat in relation to music
+beatOffset = 0.03 #offset for beat in relation to music
 #secondsPerBeat = .5 #how many seconds are in each "beat" of the song. replaced with levelhitstiming
 goodHits = 0 #how many times player got a good hit
 badHits = 0 #how many times player missed a note
@@ -98,16 +98,13 @@ def startHit(index): # this function starts a 1234567 thing
         else:
             game.hitEffect.play()
 
-
         if i < 7:
-            time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
-        if game.active:
-            game.show_background(screen)
-            game.show_colums(screen)
-            game.update_cursor(screen, i+1)
+            if game.active:
+                game.show_background(screen)
+                game.show_colums(screen)
+                game.update_cursor(screen, i)
 
-    
-    game.show_cursor(screen)
+            time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
     #move cursor using i
 
 def updateScore():
