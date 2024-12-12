@@ -1,1 +1,2 @@
-show_cursor
+)
+game.show_colums(screen)
