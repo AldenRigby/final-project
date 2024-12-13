@@ -54,6 +54,8 @@ badHits = 0 #how many times player missed a note
 levelIndex = 0 #what hit the program is on
 playerIndex = 0 #what hit the player is on (this should always be lower than or equal to levelindex)
 accuracyList = [] #list of offsets
+checkNewBeat = False
+globalFeedback = ""
 
 
 #start = time.time() # set up the time at the start
@@ -81,8 +83,25 @@ def getRuntime(): # this function returns how much time since the program starte
 def getOffset(time): #this function returns how off you were in ms
     return int((getRuntime() - time - hitOffset)*1000)
 
+
+def drawScreen():
+    red = (100, 0, 5)
+    teal = (0, 244, 207)
+    font = pygame.font.Font('freesansbold.ttf', 16)
+
+    game.show_background(screen)
+    screen.blit((font.render("Enter on the 7th beat", True, teal)), (25, 50))
+    teal = (0, 244, 207)
+    font = pygame.font.Font('freesansbold.ttf', 16)
+    screen.blit((font.render(globalFeedback, True, teal)), (25, 450))
+
+    game.show_colums(screen)
+
+    for i in range(1, 8):
+        screen.blit((font.render(str(i), True, teal)), ((i-1)*70+90, 120))
+
 def startHit(index): # this function starts a 1234567 thing
-    
+    global checkNewBeat
     for i in range(7):
         sys.stdout.write(f"""
   {"     "*i}{i+1}
@@ -98,21 +117,19 @@ def startHit(index): # this function starts a 1234567 thing
 
         if i < 7:
             if game.active:
-                red = (100, 0, 5)
-                teal = (0, 244, 207)
-                font = pygame.font.Font('freesansbold.ttf', 16)
-                game.show_background(screen)
-                screen.blit((font.render("Enter on the 7th beat", True, teal)), (25, 50))
-                game.show_colums(screen)
-
+                drawScreen()
+                #todo oadjowajfeowaijfe TODO awefawfe
                 game.update_cursor(screen, i)
-                for i in range(1, 8):
-                    screen.blit((font.render(str(i), True, teal)), ((i-1)*70+90, 120))
             else:
                 return
             time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
 
     #move cursor using i
+
+def showFeedback(feedback):
+    global globalFeedback 
+    globalFeedback = feedback
+    drawScreen()
 
 def updateScore():
     #print score
@@ -254,6 +271,7 @@ def handling_input(): # on player input
                 sys.stdout.write("\033[F")
                 sys.stdout.write("\033[K")
                 print(printOnHit(getOffset(currentLevelHit)), end="\r")
+                showFeedback(printOnHit(getOffset(currentLevelHit)))
                 playerIndex += 1
                 goodHits += 1
                 foundHit = True
@@ -269,6 +287,7 @@ def handling_input(): # on player input
                 sys.stdout.write("\033[K")
                 game.missEffect.play()
                 print(printOnHit(getOffset(currentLevelHit)), end="\r")
+                showFeedback(printOnHit(getOffset(currentLevelHit)))
                 playerIndex += 1
                 badHits += 1
                 foundHit = True
@@ -277,12 +296,14 @@ def handling_input(): # on player input
                 sys.stdout.write("\033[K")
                 game.blipEffect.play()
                 print(printOnHit(getOffset(currentLevelHit)), end="\r")
+                showFeedback(printOnHit(getOffset(currentLevelHit)))
            
         #if no hit then bleh
         if not foundHit:
             sys.stdout.write("\033[F")
             game.blipEffect.play()
             print("    not even close buddy     ", end="\r")
+            showFeedback("Try hitting it closer to the beat buddy")
             #badHits = badHits + 1
     updateScore()
 
