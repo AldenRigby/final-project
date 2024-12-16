@@ -68,15 +68,6 @@ for i in range(len(LEVEL_HITS)):
 game.show_background(screen)
 game.show_colums(screen)
 
-
-#set up graphics
-print("\nenter on the 7th beat")
-sys.stdout.write("\033[K")
-print("\n\n\n\n\n")
-for i in range(5):
-    sys.stdout.write("\033[F")
-    sys.stdout.write("\033[K")
-
 def getRuntime(): # this function returns how much time since the program started (useful for getting time on the level)
     return time.time() - game.startTime
 
@@ -112,12 +103,6 @@ def drawScreen():
 def startHit(index): # this function starts a 1234567 thing
     global checkNewBeat
     for i in range(7):
-        sys.stdout.write(f"""
-  {"     "*i}{i+1}
-{7*"  |  "}
-              """)
-        sys.stdout.write("\033[3F")
-        sys.stdout.flush()
         time.sleep(hitOffset)
 
         if i < 7:
@@ -139,15 +124,6 @@ def showFeedback(feedback):
     globalFeedback = feedback
     drawScreen()
 
-def updateScore():
-    #print score
-    print("\n\n\n\n")
-    print("Hits: " + str(goodHits))
-    print("Misses: " + str(badHits))
-    sys.stdout.write("\033[7F")
-
-
-
 def background(): # this function is always running in the background. this lets things happen while we .sleep() or input()
     global levelIndex, playerIndex, badHits, accuracyList, game
     while True:
@@ -168,11 +144,7 @@ def background(): # this function is always running in the background. this lets
         pygame.display.update()
         clock.tick(60)
 
-
         #other stuff
-
-        #sys.stdout.write("\033[K") #this line clears all i think
-        #print(x, end='\r')
         #if the time passes by a timestamp then activate that hit
         if levelIndex < len(LEVEL_HITS):
             if LEVEL_HITS[levelIndex] < getRuntime():
@@ -183,13 +155,9 @@ def background(): # this function is always running in the background. this lets
 
         if playerIndex < len(LEVEL_ACTUAL_HITS) and playerIndex <= levelIndex:
             if LEVEL_ACTUAL_HITS[playerIndex] < getRuntime() + leniency * 4:
-                #sys.stdout.write("\033[F")
-                sys.stdout.write("\033[K")
-                print("    Missed beat", end="\r")
                 game.missEffect.play()
                 playerIndex += 1
                 badHits += 1
-                updateScore()
            
         #time.sleep(secondsPerBeat)
 
@@ -197,12 +165,6 @@ def background(): # this function is always running in the background. this lets
         if getRuntime() > LEVEL_END:
 
             accuracy = goodHits/len(LEVEL_HITS)
-
-            print("\n\n\n\n")
-            for i in range(5):
-                sys.stdout.write("\033[F")
-                sys.stdout.write("\033[K")
-            print("Your rank:")
 
             waitTime = 1.5
 
@@ -272,9 +234,6 @@ def handling_input(): # on player input
         if playerIndex <= levelIndex:
             #if within a certain threshold, be nice and let them hit
             if currentLevelHit + leniency > getRuntime() and currentLevelHit - leniency < getRuntime():
-                sys.stdout.write("\033[F")
-                sys.stdout.write("\033[K")
-                print(printOnHit(getOffset(currentLevelHit)), end="\r")
                 showFeedback(printOnHit(getOffset(currentLevelHit)))
                 playerIndex += 1
                 goodHits += 1
@@ -286,32 +245,23 @@ def handling_input(): # on player input
 
 
             if foundHit:
-                print("", end="\r")
+                pass
             elif playerIndex <= levelIndex:
-                sys.stdout.write("\033[F")
-                sys.stdout.write("\033[K")
                 game.missEffect.play()
-                print(printOnHit(getOffset(currentLevelHit)), end="\r")
                 showFeedback(printOnHit(getOffset(currentLevelHit)))
                 playerIndex += 1
                 badHits += 1
                 foundHit = True
             else:
-                sys.stdout.write("\033[F")
-                sys.stdout.write("\033[K")
                 game.blipEffect.play()
-                print(printOnHit(getOffset(currentLevelHit)), end="\r")
                 showFeedback(printOnHit(getOffset(currentLevelHit)))
            
         #if no hit then bleh
         if not foundHit:
-            sys.stdout.write("\033[F")
             game.blipEffect.play()
             if playerIndex <= levelIndex:
-                print("    not even close buddy     ", end="\r")
                 showFeedback("Try hitting it closer to the beat buddy")
             #badHits = badHits + 1
-    updateScore()
 
 #setup the background (idk how this works but stackoverflow does)
 t = threading.Thread(target=background)
@@ -320,7 +270,6 @@ t.start()
 
 game.start()
 
-updateScore()
 #check on userinputs
 while True:
     for event in pygame.event.get():
@@ -335,12 +284,3 @@ while True:
     game.show_cursor(screen)
     pygame.display.update()
     clock.tick(60)
-
-    #input stuff
-    #inp = input()
-    #handling_input()
-    #if inp == 'q':
-     #   sys.stdout.write("\033[K")
-      #  print('quitting')
-       # backgroundMusic.stop()
-        #sys.exit()
