@@ -85,6 +85,7 @@ def getOffset(time): #this function returns how off you were in ms
 
 
 def drawScreen():
+    global goodHits, badHits
     red = (100, 0, 5)
     teal = (0, 244, 207)
     font = pygame.font.Font('freesansbold.ttf', 16)
@@ -92,8 +93,14 @@ def drawScreen():
     game.show_background(screen)
     screen.blit((font.render("Enter on the 7th beat", True, teal)), (25, 50))
     teal = (0, 244, 207)
-    screen.blit((font.render(globalFeedback, True, teal)), (25, 450))
+    font = pygame.font.Font('freesansbold.ttf', 16)
 
+    hits = "Hits: " + str(goodHits)
+    misses = "Misses: " + str(badHits)
+    screen.blit((font.render(hits, True, teal)), (25, 400))
+    screen.blit((font.render(misses, True, teal)), (25, 450))
+
+    screen.blit((font.render(globalFeedback, True, teal)), (20, 350))
     game.show_colums(screen)
     
     font = pygame.font.Font('freesansbold.ttf', 24)
