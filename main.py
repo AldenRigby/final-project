@@ -55,7 +55,7 @@ levelIndex = 0 #what hit the program is on
 playerIndex = 0 #what hit the player is on (this should always be lower than or equal to levelindex)
 accuracyList = [] #list of offsets
 checkNewBeat = False
-globalFeedback = ""
+globalFeedback = "Press space on the 7th beat"
 
 
 #start = time.time() # set up the time at the start
@@ -91,16 +91,17 @@ def drawScreen():
     font = pygame.font.Font('freesansbold.ttf', 16)
 
     game.show_background(screen)
-    screen.blit((font.render("Enter on the 7th beat", True, teal)), (25, 50))
+    screen.blit((font.render("Follow the music", True, (104, 104, 227))), (25, 25))
+    screen.blit((font.render("Press space on the 7th beat", True, (227, 188, 104))), (25, 50))
     teal = (0, 244, 207)
     font = pygame.font.Font('freesansbold.ttf', 16)
 
+    screen.blit((font.render(globalFeedback, True, teal)), (25, 380))
     hits = "Hits: " + str(goodHits)
     misses = "Misses: " + str(badHits)
-    screen.blit((font.render(hits, True, teal)), (25, 400))
+    screen.blit((font.render(hits, True, teal)), (25, 425))
     screen.blit((font.render(misses, True, teal)), (25, 450))
 
-    screen.blit((font.render(globalFeedback, True, teal)), (20, 350))
     game.show_colums(screen)
     
     font = pygame.font.Font('freesansbold.ttf', 24)
@@ -121,7 +122,6 @@ def startHit(index): # this function starts a 1234567 thing
 
         if i < 7:
             if game.active:
-                #todo oadjowajfeowaijfe TODO awefawfe
                 game.update_cursor(screen, i)
             else:
                 return 
@@ -248,15 +248,15 @@ def background(): # this function is always running in the background. this lets
 def printOnHit(offset):
     hitOrMiss = ""
     if -leniency*1000 <= offset <= leniency*1000:
-        hitOrMiss = "   HIT!  "
+        hitOrMiss = "HIT!  "
         global accuracyList
         accuracyList.append(offset)
     else:
-        hitOrMiss = "   MISS! "
+        hitOrMiss = "MISS! "
     if offset < 0:
         return hitOrMiss + "Early by " + str(-offset) + "ms."
     elif offset > 0:
-        return hitOrMiss + " Late by " + str(offset) + "ms."
+        return hitOrMiss + "Late by " + str(offset) + "ms."
     else:
         return hitOrMiss + "Perfect!"
 
@@ -264,10 +264,6 @@ def handling_input(): # on player input
     global goodHits, badHits, playerIndex, levelIndex
     #check every allowed hit in the level
     foundHit = False
-
-
-#SOMETHING HERE TODO HELP AHHHHHHH REPLACE ALL i WITH TIHS VAR DOESNT WORK
-
 
     if playerIndex < len(LEVEL_ACTUAL_HITS):
         currentLevelHit = LEVEL_ACTUAL_HITS[playerIndex]
@@ -284,6 +280,7 @@ def handling_input(): # on player input
                 goodHits += 1
                 foundHit = True
             #if too far away from the hit, count as a miss
+
         if currentLevelHit + leniency * 4 > getRuntime() and currentLevelHit - leniency * 4 < getRuntime():
             #checks if the player already missed this note by pressing early
 
@@ -310,8 +307,9 @@ def handling_input(): # on player input
         if not foundHit:
             sys.stdout.write("\033[F")
             game.blipEffect.play()
-            print("    not even close buddy     ", end="\r")
-            showFeedback("Try hitting it closer to the beat buddy")
+            if playerIndex <= levelIndex:
+                print("    not even close buddy     ", end="\r")
+                showFeedback("Try hitting it closer to the beat buddy")
             #badHits = badHits + 1
     updateScore()
 
