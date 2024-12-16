@@ -209,30 +209,36 @@ def background(): # this function is always running in the background. this lets
             time.sleep(waitTime)
 
             if accuracy == 1:
-                print("S+")
+                rank = "S+"
                 time.sleep(waitTime)
-                print("samurai says: you are a lifesaver")
+                flavorText = "samurai says: you are a lifesaver"
             elif accuracy > .9:
-                print("A")
+                rank = "A"
                 time.sleep(waitTime)
-                print("samurai says: you are maestro")
+                flavorText = "samurai says: you are maestro"
             elif accuracy > .8:
-                print("B")
+                rank = "B"
                 time.sleep(waitTime)
-                print("samurai says: you are satisfactory")
+                flavorText = "samurai says: you are satisfactory"
             elif accuracy > .7:
-                print("C")
+                rank = "C"
                 time.sleep(waitTime)
-                print("samurai says: try again please")
+                flavorText = "samurai says: try again please"
             elif accuracy > .6:
-                print("D")
+                rank = "D"
                 time.sleep(waitTime)
-                print("samurai says: this is terrible form of alternative medicine")
+                flavorText = "samurai says: this is terrible form of alternative medicine"
             else:
-                print("F")
+                rank = "F"
                 time.sleep(waitTime)
-                print("samurai says: are you awake")
-               
+                flavorText = "samurai says: are you awake?"
+
+            game.show_background(screen)
+            font = pygame.font.Font('freesansbold.ttf', 16)
+            teal = (0, 244, 207)
+            screen.blit((font.render(rank, True, teal)), (300, 175))
+            screen.blit((font.render(flavorText, True, teal)), (300, 250))
+            
             time.sleep(waitTime)
             print("Average accuracy: ", end="")
             time.sleep(waitTime)
