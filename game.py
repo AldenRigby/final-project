@@ -20,6 +20,8 @@ class Game:
         self.blipEffect = pygame.mixer.Sound('./sounds/blip.mp3')  # when player makes input not anywhere near the actual hit
         self.hitEffect = pygame.mixer.Sound('./sounds/hit.mp3')  # plays when player is supposed to hit
         self.missEffect = pygame.mixer.Sound('./sounds/miss.mp3')  # miss
+
+        self.cursorRect = self.cursor.get_rect(center = (212, 350))
         #drumEffect = pygame.mixer.Sound('./sounds/drum.mp3')  # if player hits right then this should play soon after
 
     def resize_images(self):
@@ -38,10 +40,11 @@ class Game:
             screen.blit(self.columns[i], (i*70+85, 140)) 
 
     def show_cursor(self, screen):
-        screen.blit(self.cursor, (85, 125))
+        screen.blit(self.cursor, self.cursorRect)
 
     def update_cursor(self, screen, i):
-        screen.blit(self.cursor, (i*70 + 84, 220))
+        #screen.blit(self.cursor, (i*70 + 84, 220))
+        self.cursorRect.centerx = i*70 + 212
 
     def game_over(self, screen, color):
         self.show_score("game_over", screen, color)

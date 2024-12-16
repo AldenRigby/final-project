@@ -45,9 +45,9 @@ LEVEL_END = 74 #what time to end the level
 LEVEL_ACTUAL_HITS = [] # timing of when they actually have to hit
 
 
-leniency = .12 #if hit is within this many seconds (+-) of a valid input then allow it
+leniency = .15 #if hit is within this many seconds (+-) of a valid input then allow it
 hitOffset = 0 #offset for hit after beat
-beatOffset = 0.03 #offset for beat in relation to music
+beatOffset = 0.05 #offset for beat in relation to music
 #secondsPerBeat = .5 #how many seconds are in each "beat" of the song. replaced with levelhitstiming
 goodHits = 0 #how many times player got a good hit
 badHits = 0 #how many times player missed a note
@@ -92,13 +92,14 @@ def drawScreen():
     game.show_background(screen)
     screen.blit((font.render("Enter on the 7th beat", True, teal)), (25, 50))
     teal = (0, 244, 207)
-    font = pygame.font.Font('freesansbold.ttf', 16)
     screen.blit((font.render(globalFeedback, True, teal)), (25, 450))
 
     game.show_colums(screen)
+    
+    font = pygame.font.Font('freesansbold.ttf', 24)
 
     for i in range(1, 8):
-        screen.blit((font.render(str(i), True, teal)), ((i-1)*70+90, 120))
+        screen.blit((font.render(str(i), True, teal)), ((i-1)*70+97, 110))
 
 def startHit(index): # this function starts a 1234567 thing
     global checkNewBeat
@@ -110,19 +111,19 @@ def startHit(index): # this function starts a 1234567 thing
         sys.stdout.write("\033[3F")
         sys.stdout.flush()
         time.sleep(hitOffset)
+
+        if i < 7:
+            if game.active:
+                #todo oadjowajfeowaijfe TODO awefawfe
+                game.update_cursor(screen, i)
+            else:
+                return 
+        
         if i < 6:
             game.beatEffect.play()
         else:
             game.hitEffect.play()
-
-        if i < 7:
-            if game.active:
-                drawScreen()
-                #todo oadjowajfeowaijfe TODO awefawfe
-                game.update_cursor(screen, i)
-            else:
-                return
-            time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
+        time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
 
     #move cursor using i
 
@@ -324,7 +325,9 @@ while True:
         if event.type == pygame.KEYDOWN:
             #blipEffect.play()
             handling_input()  
-
+            
+    drawScreen()
+    game.show_cursor(screen)
     pygame.display.update()
     clock.tick(60)
 
