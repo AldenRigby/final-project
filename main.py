@@ -40,6 +40,7 @@ LEVEL_SECONDS_PER_BEAT = 60/LEVEL_BPM
 LEVEL_HITS        = [0,    9.6, 14.4, 16.55, 17.75, 19.25, 21.65, 24.05, 26.15, 27.35, 28.8, 30,  31.2, 32.4, 33.6, 34.8, 36,  37.2, 38.4, 39.6, 40.8, 42,  43.2, 44.4, 45.6, 46.8, 48,  49.2, 50.4, 51.6, 52.8, 54,  55.2, 56.4, 57.6, 58.95, 60,  61.35,  62.4,  63.75, 64.8, 65.85, 67.05, 68.25, 72.3]
 LEVEL_HITS_TIMING = [1.2, .6,  .3,   .15,   .15,   .3,   .3,   .3,      .15,   .15,   .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,   .15, .15,    .15,   .15,   .15,  .15,   .15,   .15,   .15]
 LEVEL_END = 74 #what time to end the level
+LEVEL_END = 5
 
 
 LEVEL_ACTUAL_HITS = [] # timing of when they actually have to hit
@@ -137,8 +138,8 @@ def background(): # this function is always running in the background. this lets
                 if event.key == pygame.K_RETURN and game.active:
                     handling_input()
 
-                if event.key == pygame.K_SPACE and game.active == False:
-                    game.restart()
+                #if event.key == pygame.K_SPACE and game.active == False:
+                #    game.restart()
 
 
         pygame.display.update()
@@ -163,6 +164,10 @@ def background(): # this function is always running in the background. this lets
 
 
         if getRuntime() > LEVEL_END:
+            
+            game.backgroundMusic.stop()
+
+            game.active = False
 
             accuracy = goodHits/len(LEVEL_HITS)
 
@@ -278,6 +283,10 @@ game.start()
 
 #check on userinputs
 while True:
+    if game.active:
+        drawScreen()
+        game.show_cursor(screen)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -285,8 +294,6 @@ while True:
         if event.type == pygame.KEYDOWN:
             #blipEffect.play()
             handling_input()  
-            
-    drawScreen()
-    game.show_cursor(screen)
+
     pygame.display.update()
     clock.tick(60)
