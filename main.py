@@ -201,10 +201,10 @@ def background(): # this function is always running in the background. this lets
                 flavorText = "samurai says: are you awake?"
 
             game.show_background(screen)
-            font = pygame.font.Font('freesansbold.ttf', 16)
+            font = pygame.font.Font('freesansbold.ttf', 20)
             teal = (0, 244, 207)
-            screen.blit((font.render(rank, True, teal)), (300, 175))
-            screen.blit((font.render(flavorText, True, teal)), (300, 250))
+            screen.blit((font.render(rank, True, teal)), (150, 125))
+            screen.blit((font.render(flavorText, True, teal)), (150, 250))
             
             time.sleep(waitTime)
             print("Average accuracy: ", end="")
