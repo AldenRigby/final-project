@@ -33,7 +33,6 @@ badHits = 0 #how many times player missed a note
 levelIndex = 0 #what hit the program is on
 playerIndex = 0 #what hit the player is on (this should always be lower than or equal to levelindex)
 accuracyList = [] #list of offsets
-checkNewBeat = False
 globalFeedback = "Press space on the 7th beat"
 
 for i in range(len(LEVEL_HITS)):
@@ -72,7 +71,6 @@ def drawScreen():
         screen.blit((font.render(str(i), True, teal)), ((i-1)*70+97, 110))
 
 def startHit(index): # this function starts a 1234567 thing
-    global checkNewBeat
     for i in range(7):
         time.sleep(hitOffset)
 
@@ -245,7 +243,6 @@ while True:
             pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN:
-            #blipEffect.play()
             handling_input()  
 
     pygame.display.update()
