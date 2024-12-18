@@ -164,7 +164,7 @@ def background(): # this function is always running in the background. this lets
 
 
         if getRuntime() > LEVEL_END:
-            
+
             game.backgroundMusic.stop()
 
             game.active = False
@@ -173,45 +173,46 @@ def background(): # this function is always running in the background. this lets
 
             waitTime = 1.5
 
-            time.sleep(waitTime)
-
             if accuracy == 1:
                 rank = "S+"
-                time.sleep(waitTime)
                 flavorText = "samurai says: you are a lifesaver"
             elif accuracy > .9:
                 rank = "A"
-                time.sleep(waitTime)
                 flavorText = "samurai says: you are maestro"
             elif accuracy > .8:
                 rank = "B"
-                time.sleep(waitTime)
                 flavorText = "samurai says: you are satisfactory"
             elif accuracy > .7:
                 rank = "C"
-                time.sleep(waitTime)
                 flavorText = "samurai says: try again please"
             elif accuracy > .6:
                 rank = "D"
-                time.sleep(waitTime)
                 flavorText = "samurai says: this is terrible form of alternative medicine"
             else:
                 rank = "F"
-                time.sleep(waitTime)
                 flavorText = "samurai says: are you awake?"
 
             game.show_background(screen)
             font = pygame.font.Font('freesansbold.ttf', 16)
             teal = (0, 244, 207)
-            screen.blit((font.render(rank, True, teal)), (300, 175))
-            screen.blit((font.render(flavorText, True, teal)), (300, 250))
-            
+
             time.sleep(waitTime)
-            print("Average accuracy: ", end="")
+            screen.blit((font.render("Your rank:", True, teal)), (200, 150))
+            time.sleep(waitTime)
+            screen.blit((font.render(rank, True, teal)), (200, 200))
+            time.sleep(waitTime)
+            screen.blit((font.render(flavorText, True, teal)), (200, 250))
             time.sleep(waitTime)
             absAccuracyList = []
             for i in accuracyList:
                 absAccuracyList.append(abs(i))
+            accuracyStr = str(round(sum(absAccuracyList)/len(absAccuracyList)))
+            if len(absAccuracyList) == 0:
+                accuracyStr = "XX"
+            screen.blit((font.render("Average accuracy: " + accuracyStr + "ms", True, teal)), (200, 300))
+            
+            print("Average accuracy: ", end="")
+            time.sleep(waitTime)
             print(str(round(sum(absAccuracyList)/len(absAccuracyList))) + "ms")
 
             exit("Game end")
