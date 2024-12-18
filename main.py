@@ -33,7 +33,7 @@ badHits = 0 #how many times player missed a note
 levelIndex = 0 #what hit the program is on
 playerIndex = 0 #what hit the player is on (this should always be lower than or equal to levelindex)
 accuracyList = [] #list of offsets
-globalFeedback = "Press space on the 7th beat"
+globalFeedback = "Press Enter on the 7th beat"
 
 for i in range(len(LEVEL_HITS)):
     LEVEL_ACTUAL_HITS.append(LEVEL_HITS[i] + LEVEL_HITS_TIMING[i]*6 + beatOffset)
@@ -52,7 +52,7 @@ def drawScreen():
 
     game.show_background(screen)
     screen.blit((font.render("Follow the music", True, (104, 104, 227))), (25, 25))
-    screen.blit((font.render("Press space on the 7th beat", True, (227, 188, 104))), (25, 50))
+    screen.blit((font.render("Press Enter on the 7th beat", True, (227, 188, 104))), (25, 50))
 
     teal = (0, 244, 207)
     font = pygame.font.Font('freesansbold.ttf', 16)
