@@ -1,18 +1,6 @@
 #something like this:
 #https://rhythmdr.com/cny/
 
-"""
-stuff i used
-
-sys.stdout is just fancy print. idk
-
-sys.stdout.write("\033[F") this command tells the print thing to move up one. |
-sys.stdout.write("\033[3F") this moves it up 3 times
-
-sys.stdout.write("\033[K") this command clears the current line
-
-"""
-
 import time
 import threading
 import sys
@@ -195,9 +183,6 @@ def background(): # this function is always running in the background. this lets
             game.show_background(screen)
             font = pygame.font.Font('freesansbold.ttf', 20)
             teal = (0, 244, 207)
-
-            screen.blit((font.render(rank, True, teal)), (150, 125))
-            screen.blit((font.render(flavorText, True, teal)), (150, 250))
             
             time.sleep(waitTime)
             screen.blit((font.render("Your rank:", True, teal)), (200, 150))
@@ -209,18 +194,14 @@ def background(): # this function is always running in the background. this lets
             absAccuracyList = []
             for i in accuracyList:
                 absAccuracyList.append(abs(i))
-            accuracyStr = str(round(sum(absAccuracyList)/len(absAccuracyList)))
+            
             if len(absAccuracyList) == 0:
                 accuracyStr = "XX"
+            else:
+                accuracyStr = str(round(sum(absAccuracyList)/len(absAccuracyList)))
             screen.blit((font.render("Average accuracy: " + accuracyStr + "ms", True, teal)), (200, 300))
             
-            print("Average accuracy: ", end="")
-            time.sleep(waitTime)
-            print(str(round(sum(absAccuracyList)/len(absAccuracyList))) + "ms")
-
             exit("Game end")
-
-        sys.stdout.flush()
 
 def printOnHit(offset):
     hitOrMiss = ""
