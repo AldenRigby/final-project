@@ -14,29 +14,20 @@ clock = pygame.time.Clock()
 game = Game('img/column3.png', 'img/cursor.png', 'img/background2.jpg')
 game.resize_images()
 
-
-
-
 #how many seconds after program runs to start a 7 thing. //
 #how many seconds between beats for the 7 hit above thingy
 #samurai techno is 200 bpm. .6 for fast, .3 for medium, .15 for fast
 LEVEL_BPM = 200
 LEVEL_SECONDS_PER_BEAT = 60/LEVEL_BPM
-#LEVEL_HITS_BEAT        = [0, 32, 48, 51.16, 59.16]
-#LEVEL_HITS_TIMING_BEAT = [4, 2,  1, .5,    .5]
 #                                                                                the drop V                                                                                                                                   #slowdown V
 LEVEL_HITS        = [0,    9.6, 14.4, 16.55, 17.75, 19.25, 21.65, 24.05, 26.15, 27.35, 28.8, 30,  31.2, 32.4, 33.6, 34.8, 36,  37.2, 38.4, 39.6, 40.8, 42,  43.2, 44.4, 45.6, 46.8, 48,  49.2, 50.4, 51.6, 52.8, 54,  55.2, 56.4, 57.6, 58.95, 60,  61.35,  62.4,  63.75, 64.8, 65.85, 67.05, 68.25, 72.3]
 LEVEL_HITS_TIMING = [1.2, .6,  .3,   .15,   .15,   .3,   .3,   .3,      .15,   .15,   .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,  .15, .15,  .15,  .15,  .15,   .15, .15,    .15,   .15,   .15,  .15,   .15,   .15,   .15]
 LEVEL_END = 74 #what time to end the level
-
-
 LEVEL_ACTUAL_HITS = [] # timing of when they actually have to hit
-
 
 leniency = .15 #if hit is within this many seconds (+-) of a valid input then allow it
 hitOffset = 0 #offset for hit after beat
 beatOffset = 0.05 #offset for beat in relation to music
-#secondsPerBeat = .5 #how many seconds are in each "beat" of the song. replaced with levelhitstiming
 goodHits = 0 #how many times player got a good hit
 badHits = 0 #how many times player missed a note
 levelIndex = 0 #what hit the program is on
@@ -45,23 +36,14 @@ accuracyList = [] #list of offsets
 checkNewBeat = False
 globalFeedback = "Press space on the 7th beat"
 
-
-#start = time.time() # set up the time at the start
-
-
 for i in range(len(LEVEL_HITS)):
     LEVEL_ACTUAL_HITS.append(LEVEL_HITS[i] + LEVEL_HITS_TIMING[i]*6 + beatOffset)
-
-        
-game.show_background(screen)
-game.show_colums(screen)
 
 def getRuntime(): # this function returns how much time since the program started (useful for getting time on the level)
     return time.time() - game.startTime
 
 def getOffset(time): #this function returns how off you were in ms
     return int((getRuntime() - time - hitOffset)*1000)
-
 
 def drawScreen():
     global goodHits, badHits
@@ -72,6 +54,7 @@ def drawScreen():
     game.show_background(screen)
     screen.blit((font.render("Follow the music", True, (104, 104, 227))), (25, 25))
     screen.blit((font.render("Press space on the 7th beat", True, (227, 188, 104))), (25, 50))
+
     teal = (0, 244, 207)
     font = pygame.font.Font('freesansbold.ttf', 16)
 
@@ -95,7 +78,7 @@ def startHit(index): # this function starts a 1234567 thing
 
         if i < 7:
             if game.active:
-                game.update_cursor(screen, i)
+                game.update_cursor(i)
             else:
                 return 
         
@@ -103,9 +86,8 @@ def startHit(index): # this function starts a 1234567 thing
             game.beatEffect.play()
         else:
             game.hitEffect.play()
-        time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
 
-    #move cursor using i
+        time.sleep(LEVEL_HITS_TIMING[index]-hitOffset)
 
 def showFeedback(feedback):
     global globalFeedback 
@@ -125,10 +107,6 @@ def background(): # this function is always running in the background. this lets
                 if event.key == pygame.K_RETURN and game.active:
                     handling_input()
 
-                #if event.key == pygame.K_SPACE and game.active == False:
-                #    game.restart()
-
-
         pygame.display.update()
         clock.tick(60)
 
@@ -136,10 +114,8 @@ def background(): # this function is always running in the background. this lets
         #if the time passes by a timestamp then activate that hit
         if levelIndex < len(LEVEL_HITS):
             if LEVEL_HITS[levelIndex] < getRuntime():
-                #print("\n\n\n\n\n\n\n\nnew hit")
                 startHit(levelIndex)
                 levelIndex = levelIndex + 1
-
 
         if playerIndex < len(LEVEL_ACTUAL_HITS) and playerIndex <= levelIndex:
             if LEVEL_ACTUAL_HITS[playerIndex] < getRuntime() + leniency * 4:
@@ -147,17 +123,11 @@ def background(): # this function is always running in the background. this lets
                 playerIndex += 1
                 badHits += 1
            
-        #time.sleep(secondsPerBeat)
-
-
         if getRuntime() > LEVEL_END:
 
             game.backgroundMusic.stop()
-
             game.active = False
-
             accuracy = goodHits/len(LEVEL_HITS)
-
             waitTime = 1.5
 
             if accuracy == 1:
@@ -190,10 +160,10 @@ def background(): # this function is always running in the background. this lets
             time.sleep(waitTime)
             screen.blit((font.render(flavorText, True, teal)), (75, 225))
             time.sleep(waitTime)
+
             absAccuracyList = []
             for i in accuracyList:
                 absAccuracyList.append(abs(i))
-            
             if len(absAccuracyList) == 0:
                 accuracyStr = "XX"
             else:
@@ -225,7 +195,6 @@ def handling_input(): # on player input
     if playerIndex < len(LEVEL_ACTUAL_HITS):
         currentLevelHit = LEVEL_ACTUAL_HITS[playerIndex]
 
-
         if playerIndex <= levelIndex:
             #if within a certain threshold, be nice and let them hit
             if currentLevelHit + leniency > getRuntime() and currentLevelHit - leniency < getRuntime():
@@ -237,7 +206,6 @@ def handling_input(): # on player input
 
         if currentLevelHit + leniency * 4 > getRuntime() and currentLevelHit - leniency * 4 < getRuntime():
             #checks if the player already missed this note by pressing early
-
 
             if foundHit:
                 pass
@@ -256,13 +224,14 @@ def handling_input(): # on player input
             game.blipEffect.play()
             if playerIndex <= levelIndex:
                 showFeedback("Try hitting it closer to the beat buddy")
-            #badHits = badHits + 1
 
 #setup the background (idk how this works but stackoverflow does)
 t = threading.Thread(target=background)
 t.daemon = True
 t.start()
 
+game.show_background(screen)
+game.show_colums(screen)
 game.start()
 
 #check on userinputs
