@@ -10,7 +10,6 @@ class Game:
             self.columns.append(pygame.image.load(column_img).convert_alpha())
 
         self.cursor = pygame.image.load(cursor_img).convert_alpha()
-       # self.cursor_rect = self.cursor.get_rect(center = (, ))
         self.background = pygame.image.load(background_img).convert_alpha()
         self.active = True
         self.font = pygame.font.SysFont(None, 48)
@@ -22,7 +21,6 @@ class Game:
         self.missEffect = pygame.mixer.Sound('./sounds/miss.mp3')  # miss
 
         self.cursorRect = self.cursor.get_rect(center = (212, 350))
-        #drumEffect = pygame.mixer.Sound('./sounds/drum.mp3')  # if player hits right then this should play soon after
 
     def resize_images(self):
         for i in range(7):
@@ -43,7 +41,6 @@ class Game:
         screen.blit(self.cursor, self.cursorRect)
 
     def update_cursor(self, screen, i):
-        #screen.blit(self.cursor, (i*70 + 84, 220))
         self.cursorRect.centerx = i*70 + 212
 
     def game_over(self, screen, color):
