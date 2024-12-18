@@ -199,7 +199,7 @@ def background(): # this function is always running in the background. this lets
                 accuracyStr = "XX"
             else:
                 accuracyStr = str(round(sum(absAccuracyList)/len(absAccuracyList)))
-            screen.blit((font.render("Average accuracy: " + accuracyStr + "ms", True, teal)), (200, 300))
+            screen.blit((font.render("Average accuracy: " + accuracyStr + "ms", True, teal)), (75, 300))
             
             exit("Game end")
 
