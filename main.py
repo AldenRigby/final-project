@@ -180,16 +180,16 @@ def background(): # this function is always running in the background. this lets
                 rank = "F"
                 flavorText = "samurai says: are you awake?"
 
-            game.show_background(screen)
             font = pygame.font.Font('freesansbold.ttf', 20)
             teal = (0, 244, 207)
-            
+
+            game.show_background(screen)
             time.sleep(waitTime)
-            screen.blit((font.render("Your rank:", True, teal)), (200, 150))
+            screen.blit((font.render("Your rank:", True, teal)), (75, 125))
             time.sleep(waitTime)
-            screen.blit((font.render(rank, True, teal)), (200, 200))
+            screen.blit((font.render(rank, True, teal)), (75, 175))
             time.sleep(waitTime)
-            screen.blit((font.render(flavorText, True, teal)), (200, 250))
+            screen.blit((font.render(flavorText, True, teal)), (75, 225))
             time.sleep(waitTime)
             absAccuracyList = []
             for i in accuracyList:
